@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:lista_poznatih/model/PeopleRepository.dart';
 import 'package:lista_poznatih/screens/addNewPerson.dart';
 
-
 void main() => runApp(MaterialApp(home: Lists()));
 
 class Lists extends StatefulWidget {
@@ -14,6 +13,42 @@ class Lists extends StatefulWidget {
 final repository = new PeopleRepository();
 
 class _ListsState extends State<Lists> {
+
+  ShowAlertDialog(BuildContext context, int index) {
+
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () {
+        setState(() {
+          repository.removePerson(index);
+          Navigator.of(context).pop();
+        });
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Warning"),
+      content: Text("Selected item will be deleted"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +61,11 @@ class _ListsState extends State<Lists> {
           itemCount: repository.people.length,
           itemBuilder: (context, index) {
             return GestureDetector(
+              onLongPress: () {
+
+                ShowAlertDialog(context, index);
+
+              },
               onTap: () {
                 final snackBar = SnackBar(
                     content: Text(

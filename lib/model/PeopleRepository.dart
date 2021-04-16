@@ -11,5 +11,7 @@ class PeopleRepository{
   }
 
   void addPerson(InspiringPerson person){ people.add(person);}
+  void removePerson(int index) {people.removeAt(index);}
+
 
 }
